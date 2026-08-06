@@ -1,6 +1,6 @@
 # 简历工作台 —— 免费部署指南（国内可访问版）
 
-本部署包已为国内网络做适配：**不依赖任何被墙的外部资源**（无 Google Fonts、无境外 CDN，pdf.js 已本地化到 `vendor/`），部署后国内可直接访问。
+本部署包已为国内网络做适配：**不依赖任何被墙的外部资源**（无 Google Fonts、无境外 CDN，pdf.js 已本地化到 `vendor/`），部署后国内直接秒开。
 
 ```
 deploy/
@@ -13,44 +13,27 @@ deploy/
 └── README.md
 ```
 
-## 🥇 推荐：腾讯云 EdgeOne Makers（Pages）—— 免备案 + 自定义域名 + 长期稳定
+## 🥇 方式一（推荐）：腾讯云 EdgeOne Pages —— 国内秒开、免费、无需备案
 
-**先搞清规则（官方文档确认）：**
+EdgeOne Pages 是腾讯云的免费静态托管（公测免费），国内访问快，静态页面无需 ICP 备案。
 
-| 加速区域 | 免费默认域名 | 绑定自定义域名 |
-|---------|------------|--------------|
-| 中国大陆可用区 / 全球（含大陆） | 仅 3 小时预览链接，过期后大陆访问返回 **401** | **必须 ICP 备案** |
-| **全球可用区（不含中国大陆）** | 3 小时预览链接 | **无需备案**，长期稳定 |
+1. 打开 https://console.cloud.tencent.com/edgeone/pages （用微信/QQ 登录腾讯云即可，新用户送免费额度）
+2. 点「创建项目 / Create Project」→ 选 **上传静态资源 / Upload**
+3. 把 `index.html` 和 `vendor/` 文件夹一起上传（保持 index.html 在根目录）
+4. 部署完成后得到一个 `https://xxxx.edgeone.app` 网址，国内直接访问，发给谁都能用
 
-> 你之前的 401 就是「3 小时预览链接过期」导致的。长期访问的解法 = 加速区域选**不含中国大陆** + 绑定自定义域名，你的域名没备案也完全可以用。
+> 如果没有腾讯云账号：微信扫码登录即可，实名认证是腾讯云对国内用户的通用要求（免费）。
 
-**操作步骤：**
+## 🥈 方式二：Gitee Pages（国内备用）
 
-1. 打开 https://console.cloud.tencent.com/edgeone/pages （EdgeOne Makers，微信扫码登录腾讯云即可）
-2. 创建项目 → 部署方式选 **上传静态资源 / Upload**：把 `index.html` 和 `vendor/` 一起上传（index.html 必须在根目录）；或用 GitHub 仓库 `over4edge/resume-workbench` 关联构建
-3. **关键：加速区域选择「全球可用区（不含中国大陆）」**
-4. 进入项目 → **域名管理** → 添加自定义域名 → 输入你的域名（如 `resume.example.com` 或 `example.com`）
-5. 按弹窗指引，在域名注册商添加解析记录：
-   - **归属验证记录**（TXT，弹窗会给出）
-   - **CNAME 记录**：主机记录填子域名（如 `resume`），记录值填 Pages 提供的 `xxxx.xxx.dns.edgeone.site` 格式地址
-6. 等待状态变为「已生效」（SSL 证书自动签发，无需手动申请），之后用 `https://你的域名` 长期访问
+1. 登录 https://gitee.com → 新建公开仓库
+2. 上传 `index.html` 和 `vendor/` 到仓库根目录
+3. 仓库 → 服务 → Gitee Pages → 部署（需先完成实名认证）
+4. 得到 `https://用户名.gitee.io/仓库名/`
 
-**注意：**
+> 注意：Gitee Pages 需要实名认证，且更新后需手动重新部署；若该服务在你所在地区不可用，优先用方式一。
 
-- 非中国大陆加速区域下，**大陆用户也能正常访问**（走海外边缘节点），速度中等但稳定免费；以后备案完成，可把区域切到含大陆以提速
-- 域名 DNS 在境内注册商（阿里云 / 腾讯云 / 西部数码）均可直接添加 CNAME，**无需转移 DNS**
-- 更新内容：项目里重新构建/上传即可，自定义域名始终指向最新部署
-- 自定义域名可关联到「生产 / 预览」环境，测试和正式发布可分开
-
-## 🥈 备用：腾讯云 CloudBase 静态托管（不用域名也能长期访问）
-
-不想折腾域名时，CloudBase 静态托管的默认域名 `*.tcloudbaseapp.com` 国内可直接访问，**免费额度 1GB 存储 + 5GB/月流量，无备案、无 3 小时过期**；只有绑定自定义域名才要求备案。
-
-1. 打开 https://console.cloud.tencent.com/tcb → 开通 CloudBase
-2. 环境 → 静态网站托管 → 上传 `index.html` + `vendor/`
-3. 得到 `https://xxx.tcloudbaseapp.com` 直接可用
-
-## 🥉 海外备份：Cloudflare Pages / Netlify / GitHub Pages
+## 🥉 方式三（海外用户可选）：Netlify / GitHub Pages / Cloudflare Pages
 
 国内访问不稳定，仅作海外备份：把 `index.html` 和 `vendor/` 拖到 https://app.netlify.com/drop 即可。
 
@@ -83,3 +66,16 @@ deploy/
 
 - 纯静态版：数据只存在访问者自己的浏览器 localStorage，不上传任何服务器。
 - 远程代理版：AI 请求经腾讯云函数转发给 DeepSeek；Key 建议放函数环境变量。
+
+---
+
+## 参考与致谢
+
+本工具借鉴 / 参考了以下项目与资源：
+
+| 来源 | 用途说明 |
+|------|---------|
+| [ruanyf/weekly#9104](https://github.com/ruanyf/weekly/issues/9104) | 最初的产品灵感（单文件简历制作工具） |
+| [Viktor Oddy 官网](https://halaskastudio.com/) | 首页落地页视觉风格参考（白底、衬线大字标题、深色胶囊按钮、跑马灯与视差动效） |
+| [pdf.js](https://github.com/mozilla/pdf.js) | AI 导入旧简历 PDF 的文字提取（v5.6.205，已本地化到 vendor/） |
+| Hiragino Mincho ProN（macOS 系统字体） | 首页衬线强调字体的内嵌子集来源 |
